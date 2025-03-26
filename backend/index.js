@@ -169,31 +169,33 @@ passport.deserializeUser(async (id, done) => {
 app.get('/auth/google', passport.authenticate('google', {
   scope: ['email', 'profile']
 }));
-app.get('/auth/google/callback', passport.authenticate("google", {
-  session: true
-}), async (req, res) => {
+
+app.get('/auth/google/callback', passport.authenticate("google", { session: false }), async (req, res) => {
   try {
     const user = req.user;
-    const token = jwt.sign({
-      id: user._id,
-      name: user.name
-    }, process.env.SECRET_KEY, {
-      expiresIn: '7d'
-    });
+    const token = jwt.sign(
+      { id: user._id, name: user.name }, 
+      process.env.SECRET_KEY, 
+      { expiresIn: '7d' }
+    );
+
     res.cookie('token', token, {
       httpOnly: true,
       secure: true,
       sameSite: "None",
-      maxAge: 7 * 24 * 60 * 60 * 1000
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      domain: '.llb-hans.vercel.app' // Ensure this matches your backend domain
     });
-    // res.redirect("http://localhost:5173/");
-    res.redirect(`${process.env.VITE_FRONTEND_BASE_URL}/`);
+
+    console.log("✅ Token set successfully:", token);
+
+    res.redirect(process.env.VITE_FRONTEND_BASE_URL);
   } catch (error) {
-    console.error("Error generating token:", error);
-    // res.redirect("http://localhost:5173/signup");
-    res.redirect(`${process.env.VITE_NODE_BACKEND_URL}/signup`);
+    console.error("❌ Error generating token:", error);
+    res.redirect(`${process.env.VITE_FRONTEND_BASE_URL}/signup`);
   }
 });
+
 app.use('/auth', router);
 app.use('/admin', adminrouter);
 app.use('/manager', managerrouter);
