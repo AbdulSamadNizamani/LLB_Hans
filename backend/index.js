@@ -79,7 +79,7 @@ app.use(passport.session());
 passport.use(new Strategy({
   clientID: process.env.GOOGLE_CLIENTID,
   clientSecret: process.env.GOOGLE_SECRETID,
-  callbackURL: 'http://localhost:3000/auth/google/callback',
+  callbackURL: `${process.env.VITE_NODE_BACKEND_URL}/auth/google/callback`,
   scope: ['email', 'profile']
 }, async (accessToken, refreshToken, profile, done) => {
   try {
