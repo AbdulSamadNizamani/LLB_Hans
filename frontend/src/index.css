@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+body{
+    /* background-color: cornsilk; */
+    background-color: lightgoldenrodyellow;
+    /* background-color: #FAF3E0; */
+    /* background: linear-gradient(to right, #ffecd2, #fcb69f); */
+    /* overflow-y: auto; */
+}
