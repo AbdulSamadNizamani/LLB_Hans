@@ -189,7 +189,7 @@ app.get('/auth/google/callback', passport.authenticate("google", { session: fals
 
     console.log("✅ Token set successfully:", token);
 
-    res.redirect(process.env.VITE_FRONTEND_BASE_URL);
+    res.redirect(${process.env.VITE_FRONTEND_BASE_URL}/);
   } catch (error) {
     console.error("❌ Error generating token:", error);
     res.redirect(`${process.env.VITE_FRONTEND_BASE_URL}/signup`);
