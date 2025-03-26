@@ -93,7 +93,7 @@ const SignUp = () => {
     verify();
   },[])
   const googlehandle = ()=>{
-    window.open(`${import.meta.env.VITE_NODE_BACKEND_URL}/auth/google`,"_self")
+    window.open(`${import.meta.env.VITE_NODE_BACKEND_URL}/auth/google/callback`,"_self")
   }
 
   return (
