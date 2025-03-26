@@ -94,7 +94,7 @@ const EntireNotes = ({ onClose }) => {
                   className="bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300"
                   whileHover={{ scale: 1.02 }}
                 >
-                  <img className="w-full h-40 object-cover rounded-lg mb-2" src="public/image/notesimg8.jpg" alt="Notes" />
+                  <img className="w-full h-40 object-cover rounded-lg mb-2" src="/image/notesimg8.jpg" alt="Notes" />
                   <h3 className="text-lg font-bold">Subject: {data.subjectName}</h3>
                   <p className="text-sm text-gray-700">Department: {data.department}</p>
                   <p className="text-sm text-gray-700">Semester: {data.semester}</p>
