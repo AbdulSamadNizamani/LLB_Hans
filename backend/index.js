@@ -185,7 +185,7 @@ app.get('/auth/google/callback', passport.authenticate("google", {
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
     // res.redirect("http://localhost:5173/");
-    res.redirect(process.env.VITE_NODE_BACKEND_URL);
+    res.redirect(process.env.VITE_FRONTEND_BASE_URL);
   } catch (error) {
     console.error("Error generating token:", error);
     // res.redirect("http://localhost:5173/signup");
