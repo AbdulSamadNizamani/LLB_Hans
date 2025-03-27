@@ -138,21 +138,16 @@ router.post("/login", async (req, res) => {
 // checking user is loggedin or not
 const verifytoken = (req, res, next) => {
   try {
-    const token = req.cookies.token;
+    const token = req.cookies?.token; // ✅ Use optional chaining to avoid undefined error
     if (!token) {
-      return res.status(400).json({
-        message: "Token not-found"
-      });
+      return res.status(401).json({ message: "Token not found" }); // Change 400 to 401 (Unauthorized)
     }
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
     req.user = decoded;
     next();
   } catch (error) {
     console.error("Error verifying token:", error.message);
-    return res.status(401).json({
-      status: false,
-      message: "Invalid token"
-    });
+    return res.status(401).json({ status: false, message: "Invalid token" });
   }
 };
 router.get("/verify", verifytoken, async (req, res) => {
@@ -164,15 +159,14 @@ router.get("/verify", verifytoken, async (req, res) => {
 
 //logout
 router.get("/logout", async (req, res) => {
-  const token = await req.cookies.token;
+  const token = req.cookies?.token;
   if (!token) {
-    res.status(400).json({
-      message: "Token not-found"
-    });
+    return res.status(401).json({ message: "Token not found" }); // Use 401 instead of 400
   }
-  return res.clearCookie("token").status(200).json({
-    message: "Logged out successfully"
-  });
+
+  return res.clearCookie("token", { httpOnly: true, secure: true, sameSite: "None" }) // Ensure secure cookie settings
+    .status(200)
+    .json({ message: "Logged out successfully" });
 });
 router.post("/forgotpassword", async (req, res) => {
   try {
