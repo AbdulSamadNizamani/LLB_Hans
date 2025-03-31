@@ -164,13 +164,17 @@ router.get("/verify", verifytoken, async (req, res) => {
 
 //logout
 router.get("/logout", (req, res) => {
-  // If using sessions with Passport.js, logout properly
-  req.logout((err) => {
-    if (err) {
-      return res.status(500).json({ message: "Logout failed" });
+  try {
+    // Logout Google OAuth user if using Passport
+    if (req.isAuthenticated()) {
+      req.logout((err) => {
+        if (err) {
+          return res.status(500).json({ message: "Logout failed" });
+        }
+      });
     }
 
-    // Clear JWT token if stored in cookies
+    // Clear JWT token from cookies
     res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -182,8 +186,11 @@ router.get("/logout", (req, res) => {
 
     // Send response
     res.status(200).json({ message: "Logged out successfully" });
-  });
+  } catch (error) {
+    res.status(500).json({ message: "Server error during logout" });
+  }
 });
+
 
 router.post("/forgotpassword", async (req, res) => {
   try {
