@@ -163,44 +163,22 @@ router.get("/verify", verifytoken, async (req, res) => {
 });
 
 //logout
-router.get("/logout", async (req, res) => {
-  try {
-    // 1️⃣ If user logged in via Google (Passport.js)
-    if (req.isAuthenticated()) { 
-      req.logout((err) => {  // Passport.js method to destroy session
-        if (err) {
-          return res.status(500).json({ message: "Logout failed" });
-        }
-        // Clear the session cookie (if used)
-        req.session.destroy(() => {
-          res.clearCookie("connect.sid"); // Default Passport.js session cookie
-          // Also clear JWT token (if set)
-          res.clearCookie("token", {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "None",
-          });
-          return res.status(200).json({ message: "Logged out successfully" });
-        });
-      });
-    } 
-    // 2️⃣ If user logged in via JWT (email/password)
-    else if (req.cookies.token) { 
-      res.clearCookie("token", {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "None",
-      });
-      return res.status(200).json({ message: "Logged out successfully" });
-    } 
-    // 3️⃣ No active session
-    else {
-      return res.status(400).json({ message: "No active session" });
-    }
-  } catch (error) {
-    console.error("Logout error:", error);
-    return res.status(500).json({ message: "Internal server error" });
+router.get("/logout", (req, res) => {
+  const token = req.cookies.token; // ❌ No need for `await`
+
+  if (!token) {
+    return res.status(400).json({ // ✅ Added `return` to stop execution
+      message: "Token not found"
+    });
   }
+
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "None",
+  });
+
+  return res.status(200).json({ message: "Logged out successfully" });
 });
 
 router.post("/forgotpassword", async (req, res) => {
