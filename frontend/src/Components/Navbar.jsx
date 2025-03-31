@@ -14,24 +14,37 @@ const Navbar = () => {
    const [isopen,setIsopen] = useState(false)
   // const loggin = true
   const Logout = async () => {
-    try {
-      axios.defaults.withCredentials = true;
-      const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/auth/logout`, {
-        withCredentials: true, 
-        headers:{
-          'Content-Type':'application/json'
-        }
-      });
-      
-      if (res?.status === 200) {
-        navigate('/login'); // Redirect to login on successful logout
-        window.location.reload();
+  try {
+    axios.defaults.withCredentials = true;
+    const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/auth/logout`, {
+      withCredentials: true,
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    if (res?.status === 200) {
+      // Get authentication type (Google or JWT)
+      const authType = localStorage.getItem("authType");
+
+      // Clear authentication details
+      localStorage.removeItem("token");
+      localStorage.removeItem("authType");
+
+      // If user logged in with Google, log them out from Google as well
+      if (authType === "google") {
+        window.open("https://accounts.google.com/logout", "_self");
       }
-    } catch (error) {
-      console.log(error);
-      // You can show a toast or a more user-friendly message for errors
+
+      // Redirect to login page
+      navigate("/login");
+      window.location.reload();
     }
-  };
+  } catch (error) {
+    console.log("Logout error:", error);
+    // Optionally, show a toast message to notify the user about the error
+  }
+};
+
+
   useEffect(()=>{
     axios.defaults.withCredentials=true;
     const verify = async ()=>{
