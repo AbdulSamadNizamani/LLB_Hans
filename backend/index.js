@@ -66,9 +66,9 @@ cloudinary.v2.config({
 //   api_secret: process.env.CLOUDINARY_SECRET_KEY
 // });
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET_KEY,
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: true,
   cookie: {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -76,7 +76,6 @@ app.use(session({
     partitioned: true // ✅ Fix for future browser changes
   }
 }));
-
 
 // Initialize Passport
 app.use(passport.initialize());
