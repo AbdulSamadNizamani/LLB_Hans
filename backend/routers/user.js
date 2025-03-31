@@ -259,7 +259,7 @@ router.post("/forgotpassword", async (req, res) => {
                     <!-- Reset Button -->
                     <tr>
                         <td align="center" style="padding: 20px;">
-                            <a href="http://localhost:5173/resetpassword/${token}"
+                            <a href="${process.env.VITE_FRONTEND_BASE_URL}/resetpassword/${token}"
                                style="background: linear-gradient(135deg, #ff416c, #ff4b2b); color: white; text-decoration: none;
                                       font-size: 18px; font-weight: bold; padding: 14px 30px; border-radius: 25px; display: inline-block;">
                                🔒 Reset Password
