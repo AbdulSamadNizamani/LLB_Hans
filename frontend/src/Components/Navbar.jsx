@@ -58,7 +58,7 @@ const Navbar = () => {
     const Admin = async ()=>{
       try {
         const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/admin/adminrole`,{
-          withCredentials:true
+          withCredentials:true,
         })
         if(res?.status===200){
           setIsAdmin(true)
