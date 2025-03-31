@@ -16,31 +16,35 @@ const Navbar = () => {
   const Logout = async () => {
   try {
     axios.defaults.withCredentials = true;
+    
+    // Call backend logout API
     const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/auth/logout`, {
       withCredentials: true,
       headers: { 'Content-Type': 'application/json' }
     });
 
     if (res?.status === 200) {
-      // Get authentication type (Google or JWT)
+      // Check authentication type: Google or JWT
       const authType = localStorage.getItem("authType");
 
-      // Clear authentication details
+      // Clear local storage
       localStorage.removeItem("token");
       localStorage.removeItem("authType");
 
-      // If user logged in with Google, log them out from Google as well
-      if (authType === "google") {
-        window.open("https://accounts.google.com/logout", "_self");
-      }
+      // Clear cookies manually
+      document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
-      // Redirect to login page
-      navigate("/login");
-      window.location.reload();
+      // If Google OAuth user, log them out from Google
+      if (authType === "google") {
+        window.open("https://accounts.google.com/Logout", "_self");
+      } else {
+        // Redirect to login page for JWT users
+        window.location.href = "/login";
+      }
     }
   } catch (error) {
     console.log("Logout error:", error);
-    // Optionally, show a toast message to notify the user about the error
+    alert("Logout failed. Please try again.");
   }
 };
 
