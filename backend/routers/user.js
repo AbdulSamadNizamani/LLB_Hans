@@ -163,17 +163,28 @@ router.get("/verify", verifytoken, async (req, res) => {
 });
 
 //logout
-router.get("/logout", async (req, res) => {
-  const token = await req.cookies.token;
-  if (!token) {
-    res.status(400).json({
-      message: "Token not-found"
+router.get("/logout", (req, res) => {
+  // If using sessions with Passport.js, logout properly
+  req.logout((err) => {
+    if (err) {
+      return res.status(500).json({ message: "Logout failed" });
+    }
+
+    // Clear JWT token if stored in cookies
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "None",
     });
-  }
-  return res.clearCookie("token").status(200).json({
-    message: "Logged out successfully"
+
+    // Destroy session if using express-session
+    req.session = null;
+
+    // Send response
+    res.status(200).json({ message: "Logged out successfully" });
   });
 });
+
 router.post("/forgotpassword", async (req, res) => {
   try {
     await Connect();
