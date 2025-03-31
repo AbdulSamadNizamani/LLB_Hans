@@ -67,40 +67,48 @@ const Navbar = () => {
     }
     verify();
   },[])
-  useEffect(()=>{
-    const Admin = async ()=>{
-      try {
-        const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/admin/adminrole`,{
-          withCredentials:true,
-        })
-        if(res?.status===200){
-          setIsAdmin(true)
-        }else{
-          setIsAdmin(false)
-        }
-      } catch (error) {
-        console.log(error)
+  useEffect(() => {
+  const Admin = async () => {
+    try {
+      const token = localStorage.getItem("token"); // Get JWT from localStorage
+      const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/admin/adminrole`, {
+        headers: { Authorization: `Bearer ${token}` }, // Send token in headers
+        withCredentials: true,
+      });
+
+      if (res?.status === 200) {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
       }
+    } catch (error) {
+      console.log(error);
     }
-    Admin();
-  },[]);
-  useEffect(()=>{
-    const Manager = async ()=>{
-      try {
-        const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/manager/managerrole`,{
-          withCredentials:true
-        })
-        if(res?.status===200){
-          setIsManager(true)
-        }else{
-          setIsManager(false)
-        }
-      } catch (error) {
-        console.log(error)
+  };
+  Admin();
+}, []);
+
+useEffect(() => {
+  const Manager = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/manager/managerrole`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      });
+
+      if (res?.status === 200) {
+        setIsManager(true);
+      } else {
+        setIsManager(false);
       }
+    } catch (error) {
+      console.log(error);
     }
-    Manager();
-  },[])
+  };
+  Manager();
+}, []);
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
