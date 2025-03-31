@@ -163,17 +163,24 @@ router.get("/verify", verifytoken, async (req, res) => {
 });
 
 //logout
-router.get("/logout", async (req, res) => {
-  const token = await req.cookies.token;
+router.get("/logout", (req, res) => {
+  const token = req.cookies.token; // ❌ No need for `await`
+
   if (!token) {
-    res.status(400).json({
-      message: "Token not-found"
+    return res.status(400).json({ // ✅ Added `return` to stop execution
+      message: "Token not found"
     });
   }
-  return res.clearCookie("token").status(200).json({
-    message: "Logged out successfully"
+
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "None",
   });
+
+  return res.status(200).json({ message: "Logged out successfully" });
 });
+
 router.post("/forgotpassword", async (req, res) => {
   try {
     await Connect();
