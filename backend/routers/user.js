@@ -164,21 +164,33 @@ router.get("/verify", verifytoken, async (req, res) => {
 
 //logout
 router.get("/logout", (req, res) => {
-  const token = req.cookies.token; // ❌ No need for `await`
+  // Get token from cookies
+  const token = req.cookies.token;
 
+  // Additional check if you want to verify the token before clearing
   if (!token) {
-    return res.status(400).json({ // ✅ Added `return` to stop execution
-      message: "Token not found"
+    return res.status(200).json({ 
+      success: true,
+      message: "No active session found" 
     });
   }
 
+  // Clear the cookie with ALL the same options used when setting it
   res.clearCookie("token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "None",
+    path: "/", // Explicitly set path if you set it originally
+    domain: process.env.NODE_ENV === "production" 
+      ? ".yourdomain.com" // Your production domain with leading dot
+      : undefined, // Local development
+    partitioned: true // Must match original cookie setting
   });
 
-  return res.status(200).json({ message: "Logged out successfully" });
+  return res.status(200).json({ 
+    success: true,
+    message: "Logged out successfully" 
+  });
 });
 
 router.post("/forgotpassword", async (req, res) => {
