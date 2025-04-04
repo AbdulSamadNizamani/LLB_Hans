@@ -22,7 +22,7 @@ const Navbar = () => {
         });
         if (res?.status === 200) {
             navigate('/login'); 
-            window.location.reload();
+            // window.location.reload();
         }
     } catch (error) {
         console.error("Logout failed", error);
