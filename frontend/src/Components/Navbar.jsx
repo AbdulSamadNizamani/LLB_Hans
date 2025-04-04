@@ -21,6 +21,9 @@ const Navbar = () => {
             headers: { 'Content-Type': 'application/json' }
         });
         if (res?.status === 200) {
+            console.log(localStorage)
+            console.log(sessionStorage)
+            console.log(document.cookie)
             localStorage.removeItem("token");  // If token is stored in localStorage
             sessionStorage.removeItem("token"); // If token is stored in sessionStorage
             document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
