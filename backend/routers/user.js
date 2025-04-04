@@ -172,7 +172,7 @@ router.get("/logout", (req, res) => {
   }
   res.clearCookie("token", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: true,
     sameSite: "None",
   });
   if (req.session) {

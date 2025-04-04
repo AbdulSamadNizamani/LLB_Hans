@@ -24,9 +24,6 @@ const Navbar = () => {
             localStorage.removeItem("token");  // If token is stored in localStorage
             sessionStorage.removeItem("token"); // If token is stored in sessionStorage
             document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            console.log(localStorage)
-            console.log(sessionStorage)
-            console.log(document.cookie)
             navigate('/login'); 
             // window.location.reload();
         }
