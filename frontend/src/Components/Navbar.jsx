@@ -25,7 +25,7 @@ const Navbar = () => {
             sessionStorage.removeItem("token"); // If token is stored in sessionStorage
             document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             navigate('/login'); 
-            // window.location.reload();
+            window.location.reload();
         }
     } catch (error) {
         console.error("Logout failed", error);
