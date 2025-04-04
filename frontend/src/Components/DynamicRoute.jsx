@@ -39,7 +39,9 @@ const DynamicRoute = () => {
   useEffect(() => {
     const userrole = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/manager/managerrole`);
+        const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/manager/managerrole`,{
+          withCredentials:true
+        });
         setIsAdmin(res?.status === 200);
       } catch (error) {
         console.log(error);

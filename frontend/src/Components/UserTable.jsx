@@ -51,10 +51,20 @@ const UserTable = ({ onClose }) => {
     }
   };
 
-  const handleAddAsManager = async (id, e) => {
-    e.preventDefault();
+  const handleAddAsManager = async (id) => {
     try {
-      const res = await axios.patch(`${import.meta.env.VITE_NODE_BACKEND_URL}/auth/addmanager/${id}`);
+      const res = await axios.patch(
+        `${import.meta.env.VITE_NODE_BACKEND_URL}/auth/addmanager/${id}`,
+        {}, // No body needed
+        {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem("token")}`, // Pass token
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
+        }
+      );
+      
       if (res?.status === 200) {
         setUserdata(userdata.map(user => 
           user._id === id ? { ...user, role: "Manager" } : user
@@ -63,9 +73,10 @@ const UserTable = ({ onClose }) => {
       }
     } catch (error) {
       console.error("Error updating user role:", error?.response?.data || error.message);
+      alert(error?.response?.data?.message || "Access Denied!");
     }
   };
-
+  
   return (
     <div onClick={closeMenu} className="fixed inset-0 backdrop-blur-md flex justify-center items-center bg-black/50 p-4">
       <motion.div 

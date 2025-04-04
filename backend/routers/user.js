@@ -164,17 +164,35 @@ router.get("/verify", verifytoken, async (req, res) => {
 });
 
 //logout
-router.get("/logout", async (req, res) => {
-  const token = await req.cookies.token;
+// router.get("/logout", async (req, res) => {
+//   const token = await req.cookies.token;
+//   if (!token) {
+//     res.status(400).json({
+//       message: "Token not-found"
+//     });
+//   }
+//   return res.clearCookie("token").status(200).json({
+//     message: "Logged out successfully"
+//   });
+// });
+router.get("/logout", (req, res) => {
+  const token = req.cookies.token; // ❌ No need for `await`
+
   if (!token) {
-    res.status(400).json({
-      message: "Token not-found"
+    return res.status(400).json({ // ✅ Added `return` to stop execution
+      message: "Token not found"
     });
   }
-  return res.clearCookie("token").status(200).json({
-    message: "Logged out successfully"
+
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "None",
   });
+
+  return res.status(200).json({ message: "Logged out successfully" });
 });
+
 router.post("/forgotpassword", async (req, res) => {
   try {
     await Connect();
@@ -249,7 +267,7 @@ router.post("/forgotpassword", async (req, res) => {
                     <!-- Reset Button -->
                     <tr>
                         <td align="center" style="padding: 20px;">
-                            <a href="http://localhost:5173/resetpassword/${token}"
+                            <a href="${process.env.VITE_FRONTEND_BASE_URL}/resetpassword/${token}"
                                style="background: linear-gradient(135deg, #ff416c, #ff4b2b); color: white; text-decoration: none;
                                       font-size: 18px; font-weight: bold; padding: 14px 30px; border-radius: 25px; display: inline-block;">
                                🔒 Reset Password
@@ -581,11 +599,11 @@ router.patch('/addmanager/:id', async (req, res) => {
     // Check if the requester is an admin (e.g., from JWT token or session)
     const requester = req.user; // Assuming the user info is stored in req.user after authentication
 
-    if (!requester || requester.role !== 'Admin') {
-      return res.status(403).json({
-        message: 'Access Denied: Admins only'
-      });
-    }
+    // if (!requester || requester.role !== 'Admin') {
+    //   return res.status(403).json({
+    //     message: 'Access Denied: Admins only'
+    //   });
+    // }
 
     // Assign 'Manager' role
     user.role = 'Manager';

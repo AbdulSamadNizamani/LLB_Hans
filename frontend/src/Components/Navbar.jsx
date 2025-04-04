@@ -15,7 +15,7 @@ const Navbar = () => {
   // const loggin = true
   const Logout = async () => {
     try {
-
+      axios.defaults.withCredentials = true;
       const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/auth/logout`, {
         withCredentials: true, 
         headers:{
@@ -57,7 +57,9 @@ const Navbar = () => {
   useEffect(()=>{
     const Admin = async ()=>{
       try {
-        const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/admin/adminrole`)
+        const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/admin/adminrole`,{
+          withCredentials:true
+        })
         if(res?.status===200){
           setIsAdmin(true)
         }else{
@@ -72,7 +74,9 @@ const Navbar = () => {
   useEffect(()=>{
     const Manager = async ()=>{
       try {
-        const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/manager/managerrole`)
+        const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/manager/managerrole`,{
+          withCredentials:true
+        })
         if(res?.status===200){
           setIsManager(true)
         }else{

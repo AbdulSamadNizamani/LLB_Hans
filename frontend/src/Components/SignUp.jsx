@@ -79,6 +79,7 @@ const SignUp = () => {
       try {
         const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/auth/verify`,{
           withCredentials:true,
+          
         });
         if(res?.status===200){
           navigate('/')
@@ -94,6 +95,7 @@ const SignUp = () => {
   const googlehandle = ()=>{
     window.open(`${import.meta.env.VITE_NODE_BACKEND_URL}/auth/google/callback`,"_self")
   }
+  // alert(`${import.meta.env.VITE_NODE_BACKEND_URL}`)
 
   return (
     <div className="flex justify-center items-center flex-col w-full h-screen bg-gradient-to-br from-purple-500 to-indigo-600 p-4">

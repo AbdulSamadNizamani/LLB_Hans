@@ -21,7 +21,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser')
 const router = require('./routers/user.js');
 const passport = require('passport');
 const session = require('express-session');
@@ -79,7 +79,8 @@ app.use(passport.session());
 passport.use(new Strategy({
   clientID: process.env.GOOGLE_CLIENTID,
   clientSecret: process.env.GOOGLE_SECRETID,
-  callbackURL: 'http://localhost:3000/auth/google/callback',
+  // callbackURL: 'http://localhost:3000/auth/google/callback',
+  callbackURL: `${process.env.VITE_NODE_BACKEND_URL}/auth/google/callback`,
   scope: ['email', 'profile']
 }, async (accessToken, refreshToken, profile, done) => {
   try {
@@ -182,10 +183,13 @@ app.get('/auth/google/callback', passport.authenticate("google", {
     });
     res.cookie('token', token, {
       httpOnly: true,
+      secure: true,
+      sameSite: "None",
       maxAge: 7 * 24 * 60 * 60 * 1000
+
     });
     // res.redirect("http://localhost:5173/");
-    res.redirect(process.env.VITE_NODE_BACKEND_URL);
+    res.redirect(process.env.VITE_FRONTEND_BASE_URL);
   } catch (error) {
     console.error("Error generating token:", error);
     // res.redirect("http://localhost:5173/signup");
