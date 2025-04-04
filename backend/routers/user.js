@@ -167,23 +167,35 @@ router.get("/verify", verifytoken, async (req, res) => {
 router.get("/logout", (req, res) => {
   const token = req.cookies.token; // JWT Token
   const provider = req.session?.provider; // Store provider info in session
+  
+  // Check if token exists
   if (!token) {
     return res.status(400).json({ message: "Token not found" });
   }
+  
+  // Clear the cookie
   res.clearCookie("token");
+
+  // Destroy the session
   if (req.session) {
     req.session.destroy((err) => {
       if (err) {
         return res.status(500).json({ message: "Failed to log out" });
       }
+      
+      // Send successful logout response after session is destroyed
+      if (provider === "google") {
+        return res.status(200).json({
+          message: "Logged out successfully from Google."
+        });
+      } else {
+        return res.status(200).json({ message: "Logged out successfully." });
+      }
     });
+  } else {
+    // If there's no session to destroy, just return success
+    return res.status(200).json({ message: "Logged out successfully." });
   }
-  if (provider === "google") {
-    return res.status(200).json({
-      message: "Logged out successfully."
-    });
-  }
-  return res.status(200).json({ message: "Logged out successfully" });
 });
 
 router.post("/forgotpassword", async (req, res) => {
