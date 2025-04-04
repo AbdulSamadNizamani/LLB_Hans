@@ -595,15 +595,6 @@ router.patch('/addmanager/:id', async (req, res) => {
     // Check if the requester is an admin (e.g., from JWT token or session)
     const requester = req.user; // Assuming the user info is stored in req.user after authentication
 
-<<<<<<< HEAD
-    // if (!requester || requester.role !== 'Admin') {
-    //   return res.status(403).json({
-    //     message: 'Access Denied: Admins only'
-    //   });
-    // }
-
-=======
->>>>>>> 2a4f4aa8cc1690b25ef5adf55b3f267de9355b60
     // Assign 'Manager' role
     user.role = 'Manager';
     await user.save(); // Save the updated user
