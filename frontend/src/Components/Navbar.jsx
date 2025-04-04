@@ -20,19 +20,10 @@ const Navbar = () => {
             withCredentials: true, 
             headers: { 'Content-Type': 'application/json' }
         });
-
         if (res?.status === 200) {
-            // ✅ Clear localStorage and sessionStorage
             localStorage.removeItem("token");  // If token is stored in localStorage
             sessionStorage.removeItem("token"); // If token is stored in sessionStorage
-            
-            // ✅ Clear cookies (Optional: Backend should handle HTTP-only cookies)
             document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-            // ✅ Reset global authentication state (If using Redux/Zustand/Context)
-            // dispatch({ type: "LOGOUT" });
-
-            // ✅ Redirect to login page & refresh session
             navigate('/login'); 
             window.location.reload();
         }
