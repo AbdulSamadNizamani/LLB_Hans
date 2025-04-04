@@ -54,7 +54,7 @@ const AdminInfo = () => {
             <motion.a 
             target='_blank'
               whileHover={{ scale: 1.1 }} 
-              href='https://porfolio-lilac-alpha.vercel.app/' 
+              href='https://portfolio-one-pearl-61.vercel.app/' 
               className='flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg shadow-lg'>
               <FaEnvelope /> Portfolio
             </motion.a>

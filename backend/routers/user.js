@@ -122,9 +122,8 @@ router.post("/login", async (req, res) => {
     });
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      // Secure in production
-      sameSite: "strict"
+      secure: true,
+      sameSite: "None",
     });
     return res.status(200).json({
       message: "Login successful"
@@ -164,32 +163,29 @@ router.get("/verify", verifytoken, async (req, res) => {
 });
 
 //logout
-// router.get("/logout", async (req, res) => {
-//   const token = await req.cookies.token;
-//   if (!token) {
-//     res.status(400).json({
-//       message: "Token not-found"
-//     });
-//   }
-//   return res.clearCookie("token").status(200).json({
-//     message: "Logged out successfully"
-//   });
-// });
 router.get("/logout", (req, res) => {
-  const token = req.cookies.token; // ❌ No need for `await`
-
+  const token = req.cookies.token; // JWT Token
+  const provider = req.session?.provider; // Store provider info in session
   if (!token) {
-    return res.status(400).json({ // ✅ Added `return` to stop execution
-      message: "Token not found"
-    });
+    return res.status(400).json({ message: "Token not found" });
   }
-
   res.clearCookie("token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "None",
   });
-
+  if (req.session) {
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).json({ message: "Failed to log out" });
+      }
+    });
+  }
+  if (provider === "google") {
+    return res.status(200).json({
+      message: "Logged out successfully."
+    });
+  }
   return res.status(200).json({ message: "Logged out successfully" });
 });
 
@@ -599,12 +595,15 @@ router.patch('/addmanager/:id', async (req, res) => {
     // Check if the requester is an admin (e.g., from JWT token or session)
     const requester = req.user; // Assuming the user info is stored in req.user after authentication
 
+<<<<<<< HEAD
     // if (!requester || requester.role !== 'Admin') {
     //   return res.status(403).json({
     //     message: 'Access Denied: Admins only'
     //   });
     // }
 
+=======
+>>>>>>> 2a4f4aa8cc1690b25ef5adf55b3f267de9355b60
     // Assign 'Manager' role
     user.role = 'Manager';
     await user.save(); // Save the updated user

@@ -15,23 +15,23 @@ const Navbar = () => {
   // const loggin = true
   const Logout = async () => {
     try {
-      axios.defaults.withCredentials = true;
-      const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/auth/logout`, {
-        withCredentials: true, 
-        headers:{
-          'Content-Type':'application/json'
+        axios.defaults.withCredentials = true;
+        const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/auth/logout`, {
+            withCredentials: true, 
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if (res?.status === 200) {
+            localStorage.removeItem("token");  // If token is stored in localStorage
+            sessionStorage.removeItem("token"); // If token is stored in sessionStorage
+            document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            navigate('/login'); 
+            window.location.reload();
         }
-      });
-      
-      if (res?.status === 200) {
-        navigate('/login'); // Redirect to login on successful logout
-        window.location.reload();
-      }
     } catch (error) {
-      console.log(error);
-      // You can show a toast or a more user-friendly message for errors
+        console.error("Logout failed", error);
+        // You can show a toast notification here
     }
-  };
+};
   useEffect(()=>{
     axios.defaults.withCredentials=true;
     const verify = async ()=>{
@@ -54,40 +54,48 @@ const Navbar = () => {
     }
     verify();
   },[])
-  useEffect(()=>{
-    const Admin = async ()=>{
-      try {
-        const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/admin/adminrole`,{
-          withCredentials:true
-        })
-        if(res?.status===200){
-          setIsAdmin(true)
-        }else{
-          setIsAdmin(false)
-        }
-      } catch (error) {
-        console.log(error)
+  useEffect(() => {
+  const Admin = async () => {
+    try {
+      const token = localStorage.getItem("token"); // Get JWT from localStorage
+      const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/admin/adminrole`, {
+        headers: { Authorization: `Bearer ${token}` }, // Send token in headers
+        withCredentials: true,
+      });
+
+      if (res?.status === 200) {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
       }
+    } catch (error) {
+      console.log(error);
     }
-    Admin();
-  },[]);
-  useEffect(()=>{
-    const Manager = async ()=>{
-      try {
-        const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/manager/managerrole`,{
-          withCredentials:true
-        })
-        if(res?.status===200){
-          setIsManager(true)
-        }else{
-          setIsManager(false)
-        }
-      } catch (error) {
-        console.log(error)
+  };
+  Admin();
+}, []);
+
+useEffect(() => {
+  const Manager = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/manager/managerrole`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      });
+
+      if (res?.status === 200) {
+        setIsManager(true);
+      } else {
+        setIsManager(false);
       }
+    } catch (error) {
+      console.log(error);
     }
-    Manager();
-  },[])
+  };
+  Manager();
+}, []);
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {

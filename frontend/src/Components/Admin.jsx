@@ -47,7 +47,7 @@ const Admin = () => {
         <button className=' rounded-4xl' onClick={()=>setPostOpen(true)}>
         <Card sx={{ maxWidth: 345 }} className='rounded-2xl'>
       <CardActionArea>
-        <motion.img src='/public/image/postimage2.avif' alt='img' animate={{y:[0,-14,0]}} transition={{repeat:Infinity,duration:2,ease:'easeInOut'}}/>
+        <motion.img src='/image/postimage2.avif' alt='img' animate={{y:[0,-14,0]}} transition={{repeat:Infinity,duration:2,ease:'easeInOut'}}/>
           
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
@@ -63,7 +63,7 @@ const Admin = () => {
         <button className=' rounded-4xl' onClick={()=>setUsertable(true)}>
         <Card sx={{ maxWidth: 345 }} className='rounded-2xl'>
       <CardActionArea>
-        <motion.img src='/public/image/userprofile4.avif' alt='img' animate={{y:[0,-14,0]}} transition={{repeat:Infinity,duration:2,ease:'easeInOut'}}/>
+        <motion.img src='/image/userprofile4.avif' alt='img' animate={{y:[0,-14,0]}} transition={{repeat:Infinity,duration:2,ease:'easeInOut'}}/>
           
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
@@ -81,7 +81,7 @@ const Admin = () => {
         <button className=' rounded-4xl'onClick={()=>setVideoOpen(true)}>
         <Card sx={{ maxWidth: 345 }} className='rounded-2xl'>
       <CardActionArea>
-        <motion.img src='/public/image/video.avif' alt='img' animate={{y:[0,-14,0]}} transition={{repeat:Infinity,duration:2,ease:'easeInOut'}}/>
+        <motion.img src='/image/video.avif' alt='img' animate={{y:[0,-14,0]}} transition={{repeat:Infinity,duration:2,ease:'easeInOut'}}/>
           
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
@@ -97,7 +97,7 @@ const Admin = () => {
         <button className=' rounded-4xl' onClick={()=>setEntireNotes(true)}>
         <Card sx={{ maxWidth: 345 }} className='rounded-2xl'>
       <CardActionArea>
-        <motion.img src='/public/image/notesadmin4.avif' alt='img' animate={{y:[0,-14,0]}} transition={{repeat:Infinity,duration:2,ease:'easeInOut'}}/>
+        <motion.img src='/image/notesadmin4.avif' alt='img' animate={{y:[0,-14,0]}} transition={{repeat:Infinity,duration:2,ease:'easeInOut'}}/>
           
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
