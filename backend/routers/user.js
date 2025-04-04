@@ -164,42 +164,33 @@ router.get("/verify", verifytoken, async (req, res) => {
 
 //logout
 router.get("/logout", (req, res) => {
-  const token = req.cookies.token; // JWT Token
-  const provider = req.session?.provider; // Store provider info in session
-
+  const token = req.cookies.token; 
+  const provider = req.session?.provider; 
   if (!token && !req.session?.userId) {
     return res.status(400).json({ message: "No active session found" });
   }
-
-  // Clear JWT token if it exists
   if (token) {
     res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "None",
-      path: "/" // Important to specify the same path used when setting the cookie
+      path: "/" 
     });
   }
-
-  // Destroy session (if used)
   if (req.session) {
     req.session.destroy((err) => {
       if (err) {
         console.error("Session destruction error:", err);
         return res.status(500).json({ message: "Failed to destroy session" });
       }
-
-      // If logged in via Google, suggest revoking OAuth tokens
       if (provider === "google") {
         return res.status(200).json({
           message: "Logged out successfully. For complete logout, revoke access from Google settings."
         });
       }
-
       return res.status(200).json({ message: "Logged out successfully" });
     });
   } else {
-    // If no session exists but token was cleared
     return res.status(200).json({ message: "Logged out successfully" });
   }
 });
