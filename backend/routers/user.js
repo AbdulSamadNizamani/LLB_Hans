@@ -164,19 +164,35 @@ router.get("/verify", verifytoken, async (req, res) => {
 
 //logout
 router.get("/logout", (req, res) => {
-  const token = req.cookies.token; // ❌ No need for `await`
+  const token = req.cookies.token; // JWT Token
+  const provider = req.session?.provider; // Store provider info in session
 
   if (!token) {
-    return res.status(400).json({ // ✅ Added `return` to stop execution
-      message: "Token not found"
-    });
+    return res.status(400).json({ message: "Token not found" });
   }
 
+  // Clear JWT token
   res.clearCookie("token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "None",
   });
+
+  // Destroy session (if used)
+  if (req.session) {
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).json({ message: "Failed to log out" });
+      }
+    });
+  }
+
+  // If logged in via Google, suggest revoking OAuth tokens
+  if (provider === "google") {
+    return res.status(200).json({
+      message: "Logged out successfully. For complete logout, revoke access from Google settings."
+    });
+  }
 
   return res.status(200).json({ message: "Logged out successfully" });
 });
