@@ -138,6 +138,7 @@ router.post("/login", async (req, res) => {
 // checking user is loggedin or not
 const verifytoken = (req, res, next) => {
   try {
+    console.log(req.cookies);
     const token = req.cookies.token;
     if (!token) {
       return res.status(400).json({
