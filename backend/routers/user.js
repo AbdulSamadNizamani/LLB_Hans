@@ -164,35 +164,29 @@ router.get("/verify", verifytoken, async (req, res) => {
 
 //logout
 router.get("/logout", (req, res) => {
-  const token = req.cookies.token; 
-  const provider = req.session?.provider; 
-  if (!token && !req.session?.userId) {
-    return res.status(400).json({ message: "No active session found" });
+  const token = req.cookies.token; // JWT Token
+  const provider = req.session?.provider; // Store provider info in session
+  if (!token) {
+    return res.status(400).json({ message: "Token not found" });
   }
-  if (token) {
-    res.clearCookie("token", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "None",
-      path: "/" 
-    });
-  }
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "None",
+  });
   if (req.session) {
     req.session.destroy((err) => {
       if (err) {
-        console.error("Session destruction error:", err);
-        return res.status(500).json({ message: "Failed to destroy session" });
+        return res.status(500).json({ message: "Failed to log out" });
       }
-      if (provider === "google") {
-        return res.status(200).json({
-          message: "Logged out successfully. For complete logout, revoke access from Google settings."
-        });
-      }
-      return res.status(200).json({ message: "Logged out successfully" });
     });
-  } else {
-    return res.status(200).json({ message: "Logged out successfully" });
   }
+  if (provider === "google") {
+    return res.status(200).json({
+      message: "Logged out successfully."
+    });
+  }
+  return res.status(200).json({ message: "Logged out successfully" });
 });
 router.post("/forgotpassword", async (req, res) => {
   try {
