@@ -15,23 +15,32 @@ const Navbar = () => {
   // const loggin = true
   const Logout = async () => {
     try {
-      axios.defaults.withCredentials = true;
-      const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/auth/logout`, {
-        withCredentials: true, 
-        headers:{
-          'Content-Type':'application/json'
+        axios.defaults.withCredentials = true;
+        const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/auth/logout`, {
+            withCredentials: true, 
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (res?.status === 200) {
+            // ✅ Clear localStorage and sessionStorage
+            localStorage.removeItem("token");  // If token is stored in localStorage
+            sessionStorage.removeItem("token"); // If token is stored in sessionStorage
+            
+            // ✅ Clear cookies (Optional: Backend should handle HTTP-only cookies)
+            document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+            // ✅ Reset global authentication state (If using Redux/Zustand/Context)
+            // dispatch({ type: "LOGOUT" });
+
+            // ✅ Redirect to login page & refresh session
+            navigate('/login'); 
+            window.location.reload();
         }
-      });
-      
-      if (res?.status === 200) {
-        navigate('/login'); // Redirect to login on successful logout
-        window.location.reload();
-      }
     } catch (error) {
-      console.log(error);
-      // You can show a toast or a more user-friendly message for errors
+        console.error("Logout failed", error);
+        // You can show a toast notification here
     }
-  };
+};
   useEffect(()=>{
     axios.defaults.withCredentials=true;
     const verify = async ()=>{
