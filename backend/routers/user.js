@@ -164,7 +164,7 @@ router.get("/verify", verifytoken, async (req, res) => {
 });
 
 //logout
-router.get("/logout", (req, res) => {
+router.post("/logout", (req, res) => {
   const token = req.cookies.token; // JWT Token
   const provider = req.session?.provider; // Store provider info in session
   
