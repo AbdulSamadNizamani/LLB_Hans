@@ -79,11 +79,7 @@ const SignUp = () => {
       try {
         const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/auth/verify`,{
           withCredentials:true,
-<<<<<<< HEAD
-          
-=======
           headers: { Authorization: `Bearer ${token}` }
->>>>>>> 2a4f4aa8cc1690b25ef5adf55b3f267de9355b60
         });
         if(res?.status===200){
           navigate('/')
