@@ -15,11 +15,9 @@ const Navbar = () => {
   // const loggin = true
   const Logout = async () => {
     try {
-        axios.defaults.withCredentials = true; // Ensures cookies are sent with the request
         const res = await axios.get(
             `${import.meta.env.VITE_NODE_BACKEND_URL}/auth/logout`, 
             {}, // Empty object for the request body
-            { withCredentials: true, headers: { "Content-Type": "application/json" } } // These should be in config, not body
         );
 
         if (res?.status === 200) {
