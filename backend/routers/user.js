@@ -125,7 +125,6 @@ router.post("/login", async (req, res) => {
       secure: true,
       sameSite: "None",
       path: '/',
-      domain: ".vercel.app",
     });
     return res.status(200).json({
       message: "Login successful"
