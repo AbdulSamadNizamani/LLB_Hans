@@ -15,9 +15,13 @@ const Navbar = () => {
   // const loggin = true
   const Logout = async () => {
     try {
+      axios.defaults.withCredentials = true;
         const res = await axios.get(
             `${import.meta.env.VITE_NODE_BACKEND_URL}/auth/logout`, 
-            {}, // Empty object for the request body
+            {
+              withCredentials: true, 
+            headers: { 'Content-Type': 'application/json' }
+            }, // Empty object for the request body
         );
 
         if (res?.status === 200) {
