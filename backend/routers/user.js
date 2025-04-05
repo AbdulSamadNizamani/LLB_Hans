@@ -164,33 +164,26 @@ router.get("/verify", verifytoken, async (req, res) => {
 });
 
 //logout
-router.get('/logout', (req, res) => {
-    // Clear specific token cookie
-    res.clearCookie('token', {
-        httpOnly: true,
-        secure: false, // true if HTTPS
-        sameSite: 'Lax',
+router.get("/logout", (req, res) => {
+  const token = req.cookies.token; // JWT Token
+  const provider = req.session?.provider; // Store provider info in session
+  if (!token) {
+    return res.status(400).json({ message: "Token not found" });
+  }
+  res.clearCookie("token");
+  if (req.session) {
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).json({ message: "Failed to log out" });
+      }
     });
-
-    // Clear other visible cookies
-    if (req.cookies) {
-        for (const key in req.cookies) {
-            res.clearCookie(key);
-        }
-    }
-
-    // Destroy session if it exists
-    if (req.session) {
-        req.session.destroy(err => {
-            if (err) {
-                console.error('Error destroying session:', err);
-                return res.status(500).json({ success: false, message: 'Logout failed' });
-            }
-            return res.status(200).json({ success: true, message: 'Logged out successfully' });
-        });
-    } else {
-        return res.status(200).json({ success: true, message: 'Logged out (no session)' });
-    }
+  }
+  if (provider === "google") {
+    return res.status(200).json({
+      message: "Logged out successfully."
+    });
+  }
+  return res.status(200).json({ message: "Logged out successfully" });
 });
 
 router.post("/forgotpassword", async (req, res) => {
