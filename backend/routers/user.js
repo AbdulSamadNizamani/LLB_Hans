@@ -164,38 +164,33 @@ router.get("/verify", verifytoken, async (req, res) => {
 });
 
 //logout
-router.post("/logout", (req, res) => {
-  const token = req.cookies.token; // JWT Token
-  const provider = req.session?.provider; // Store provider info in session
-  
-  // Check if token exists
-  if (!token) {
-    return res.status(400).json({ message: "Token not found" });
-  }
-  
-  // Clear the cookie
-  res.clearCookie("token");
-
-  // Destroy the session
-  if (req.session) {
-    req.session.destroy((err) => {
-      if (err) {
-        return res.status(500).json({ message: "Failed to log out" });
-      }
-      
-      // Send successful logout response after session is destroyed
-      if (provider === "google") {
-        return res.status(200).json({
-          message: "Logged out successfully from Google."
+router.get('/logout', function(req, res) {
+    // Clear the JWT token cookie specifically
+    res.clearCookie('token');
+    
+    // Clear all other cookies
+    const cookies = req.cookies;
+    for (const prop in cookies) {
+        if (Object.prototype.hasOwnProperty.call(cookies, prop)) {
+            res.cookie(prop, '', { expires: new Date(0) });
+        }
+    }
+    
+    // Destroy the session if it exists
+    if (req.session) {
+        req.session.destroy((err) => {
+            if (err) {
+                // If session destruction fails, still redirect but log the error
+                console.error('Failed to destroy session during logout:', err);
+                return res.redirect('/');
+            }
+            // After successful session destruction, redirect
+            res.redirect('/login');
         });
-      } else {
-        return res.status(200).json({ message: "Logged out successfully." });
-      }
-    });
-  } else {
-    // If there's no session to destroy, just return success
-    return res.status(200).json({ message: "Logged out successfully." });
-  }
+    } else {
+        // If no session exists, just redirect
+        res.redirect('/login');
+    }
 });
 
 router.post("/forgotpassword", async (req, res) => {
