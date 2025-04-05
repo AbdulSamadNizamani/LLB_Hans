@@ -124,6 +124,7 @@ router.post("/login", async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "None",
+      path: '/',
     });
     return res.status(200).json({
       message: "Login successful"
@@ -174,6 +175,7 @@ router.get("/logout", (req, res) => {
     httpOnly: true,
     secure: true,
     sameSite: "None",
+    path: '/',
   });
   if (req.session) {
     req.session.destroy((err) => {
