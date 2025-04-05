@@ -170,7 +170,11 @@ router.get("/logout", (req, res) => {
   if (!token) {
     return res.status(400).json({ message: "Token not found" });
   }
-  res.clearCookie("token");
+  res.clearCookie("token", token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+  });
   if (req.session) {
     req.session.destroy((err) => {
       if (err) {
