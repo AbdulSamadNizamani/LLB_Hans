@@ -164,32 +164,32 @@ router.get("/verify", verifytoken, async (req, res) => {
 });
 
 //logout
-router.get('/logout', function(req, res) {
-    // Clear the JWT token cookie specifically
-    res.clearCookie('token');
-    
-    // Clear all other cookies
-    const cookies = req.cookies;
-    for (const prop in cookies) {
-        if (Object.prototype.hasOwnProperty.call(cookies, prop)) {
-            res.cookie(prop, '', { expires: new Date(0) });
+router.get('/logout', (req, res) => {
+    // Clear specific token cookie
+    res.clearCookie('token', {
+        httpOnly: true,
+        secure: false, // true if HTTPS
+        sameSite: 'Lax',
+    });
+
+    // Clear other visible cookies
+    if (req.cookies) {
+        for (const key in req.cookies) {
+            res.clearCookie(key);
         }
     }
-    
-    // Destroy the session if it exists
+
+    // Destroy session if it exists
     if (req.session) {
-        req.session.destroy((err) => {
+        req.session.destroy(err => {
             if (err) {
-                // If session destruction fails, still redirect but log the error
-                console.error('Failed to destroy session during logout:', err);
-                return res.redirect('/');
+                console.error('Error destroying session:', err);
+                return res.status(500).json({ success: false, message: 'Logout failed' });
             }
-            // After successful session destruction, redirect
-            res.redirect('/login');
+            return res.status(200).json({ success: true, message: 'Logged out successfully' });
         });
     } else {
-        // If no session exists, just redirect
-        res.redirect('/login');
+        return res.status(200).json({ success: true, message: 'Logged out (no session)' });
     }
 });
 
