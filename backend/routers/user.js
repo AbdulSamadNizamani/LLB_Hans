@@ -166,17 +166,21 @@ router.get("/verify", verifytoken, async (req, res) => {
 
 //logout
 router.get("/logout", (req, res) => {
-  const token = req.cookies.token; // JWT Token
-  const provider = req.session?.provider; // Store provider info in session
+  const token = req.cookies.token;
+  const provider = req.session?.provider;
+
   if (!token) {
     return res.status(400).json({ message: "Token not found" });
   }
-  res.clearCookie("token", token, {
+
+  // ✅ Correct usage
+  res.clearCookie("token", {
     httpOnly: true,
     secure: true,
     sameSite: "None",
-    path: '/',
+    path: "/", // ⬅️ Very important!
   });
+
   if (req.session) {
     req.session.destroy((err) => {
       if (err) {
@@ -184,12 +188,10 @@ router.get("/logout", (req, res) => {
       }
     });
   }
-  if (provider === "google") {
-    return res.status(200).json({
-      message: "Logged out successfully."
-    });
-  }
-  return res.status(200).json({ message: "Logged out successfully" });
+
+  return res.status(200).json({
+    message: "Logged out successfully.",
+  });
 });
 
 router.post("/forgotpassword", async (req, res) => {
