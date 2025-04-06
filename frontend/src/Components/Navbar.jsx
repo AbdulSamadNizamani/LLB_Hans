@@ -15,39 +15,18 @@ const Navbar = () => {
   // const loggin = true
  const Logout = async () => {
     try {
-        // Clear client-side storage first (in case API call fails)
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        sessionStorage.removeItem('token');
-        
-        // Clear axios defaults
-        delete axios.defaults.headers.common['Authorization'];
-        
-        // Make logout request
+        axios.defaults.withCredentials = true;
         const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/auth/logout`, {
-            withCredentials: true,
-            headers: { 
-                'Content-Type': 'application/json',
-                // Add this if you're using token in headers
-                // 'Authorization': '' // Explicitly clear
-            }
+            withCredentials: true, 
+            headers: { 'Content-Type': 'application/json' }
         });
-
         if (res?.status === 200) {
-            // Force a hard redirect to clear any in-memory state
-            window.location.href = '/login'; // This is better than navigate()
-            
-            // Alternative if you need to use navigate():
-            // navigate('/login', { replace: true });
-            // window.location.reload(); // Uncomment if needed
+            navigate('/login'); 
+            //window.location.reload();
         }
     } catch (error) {
         console.error("Logout failed", error);
-        // Fallback: still redirect to login
-        window.location.href = '/login';
-        
-        // Optional: Show error to user
-        // toast.error("Logout failed. Please clear your browser cookies.");
+        // You can show a toast notification here
     }
 };
   useEffect(()=>{
