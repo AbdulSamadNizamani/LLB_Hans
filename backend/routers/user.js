@@ -124,7 +124,6 @@ router.post("/login", async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "None",
-     domain: ".vercel.app",
     });
     return res.status(200).json({
       message: "Login successful"
@@ -177,7 +176,6 @@ router.get("/logout", (req, res) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "None",
-    domain: ".vercel.app",
   });
 
   if (req.session) {
