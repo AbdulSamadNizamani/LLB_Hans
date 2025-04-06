@@ -125,7 +125,6 @@ router.post("/login", async (req, res) => {
   secure: false,   // Allow HTTP in dev
   sameSite: "Lax", // Safer than "None" if same domain
   path: "/",
-      path: "/",
     });
     return res.status(200).json({
       message: "Login successful"
@@ -174,7 +173,6 @@ router.get("/logout", (req, res) => {
   secure: false,   // Allow HTTP in dev
   sameSite: "Lax", // Safer than "None" if same domain
   path: "/",
-      path: "/", // Make sure path matches where cookie was set
     });
 
     // Destroy the session
