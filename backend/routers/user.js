@@ -120,11 +120,10 @@ router.post("/login", async (req, res) => {
     }, process.env.SECRET_KEY, {
       expiresIn: "7d"
     });
-    res.cookie("token", {
+   res.cookie("token", token, {
       httpOnly: true,
       secure: true,
       sameSite: "None",
-      path: '/',
     });
     return res.status(200).json({
       message: "Login successful"
@@ -174,13 +173,11 @@ router.get("/logout", (req, res) => {
   }
 
   // ✅ Correct usage
-  res.clearCookie("token", {
+   res.clearCookie("token", token, {
     httpOnly: true,
     secure: true,
     sameSite: "None",
-    path: "/", // ⬅️ Very important!
   });
-
   if (req.session) {
     req.session.destroy((err) => {
       if (err) {
