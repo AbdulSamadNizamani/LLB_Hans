@@ -25,6 +25,7 @@ const Navbar = () => {
 
         if (res?.status === 200) {
             console.log("Logout successful");
+          window.location.reload();
             navigate("/login");
         }
     } catch (error) {
