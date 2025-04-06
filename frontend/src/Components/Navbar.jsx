@@ -13,14 +13,14 @@ const Navbar = () => {
    const [userdata, setUserdata] = useState([]);
    const [isopen,setIsopen] = useState(false)
   // const loggin = true
-  const Logout = async () => {
+ const Logout = async () => {
     try {
         const res = await axios.get(
             `${import.meta.env.VITE_NODE_BACKEND_URL}/auth/logout`, 
             {
-              credentials: "include",
-            headers: { 'Content-Type': 'application/json' }
-            }, // Empty object for the request body
+              withCredentials: true,
+              headers: { 'Content-Type': 'application/json' }
+            }
         );
 
         if (res?.status === 200) {
