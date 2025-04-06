@@ -121,8 +121,8 @@ router.post("/login", async (req, res) => {
       expiresIn: "7d"
     });
    res.cookie("token", token, {
-     secure: true,
-      sameSite: "None",
+     secure: false,   // Allow HTTP in dev
+  sameSite: "Lax",
       path: "/",
     });
     return res.status(200).json({
@@ -168,8 +168,8 @@ router.get("/logout", (req, res) => {
   try {
     // Clear the cookie first
     res.clearCookie("token", {
-      secure: true,
-      sameSite: "None",
+      secure: false,   // Allow HTTP in dev
+  sameSite: "Lax",
       path: "/", // Make sure path matches where cookie was set
     });
 
