@@ -48,6 +48,7 @@ const Login = () => {
       if (res?.status === 200) {
         setIsLoading(false);
         toast.success("Logged Successfully");
+        window.location.reload();
         setTimeout(() => {
           navigate("/");
         });
