@@ -121,8 +121,6 @@ router.post("/login", async (req, res) => {
       expiresIn: "7d"
     });
    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
       sameSite: "None",
       path: "/",
     });
@@ -169,8 +167,6 @@ router.get("/logout", (req, res) => {
   try {
     // Clear the cookie first
     res.clearCookie("token", {
-      httpOnly: true,
-      secure: true,
       sameSite: "None",
       path: "/", // Make sure path matches where cookie was set
     });
