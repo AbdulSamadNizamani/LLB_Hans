@@ -166,18 +166,18 @@ router.get("/verify", verifytoken, async (req, res) => {
 //logout
 router.get("/logout", (req, res) => {
   const token = req.cookies.token;
-  const provider = req.session?.provider;
 
   if (!token) {
     return res.status(400).json({ message: "Token not found" });
   }
 
-  // ✅ Correct usage
-   res.clearCookie("token", token, {
+  // Corrected clearing of cookie
+  res.clearCookie("token", {
     httpOnly: true,
-    secure: true,
+    secure: process.env.NODE_ENV === "production",
     sameSite: "None",
   });
+
   if (req.session) {
     req.session.destroy((err) => {
       if (err) {
