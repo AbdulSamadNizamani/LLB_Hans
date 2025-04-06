@@ -120,7 +120,7 @@ router.post("/login", async (req, res) => {
     }, process.env.SECRET_KEY, {
       expiresIn: "7d"
     });
-    res.cookie("token", token, {
+    res.cookie("token", {
       httpOnly: true,
       secure: true,
       sameSite: "None",
@@ -179,7 +179,6 @@ router.get("/logout", (req, res) => {
     secure: true,
     sameSite: "None",
     path: "/", // ⬅️ Very important!
-    domain: ".vercel.app",
   });
 
   if (req.session) {
