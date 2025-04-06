@@ -121,10 +121,10 @@ router.post("/login", async (req, res) => {
       expiresIn: "7d"
     });
    res.cookie("token", token, {
-     httpOnly: true,
-  secure: false,   // Allow HTTP in dev
-  sameSite: "Lax", // Safer than "None" if same domain
-  path: "/",
+     httpOnly: true,  // Prevent JS access
+  secure: true,    // HTTPS only
+  sameSite: "None", // If your frontend/backend are on different domains
+  path: "/", 
     });
     return res.status(200).json({
       message: "Login successful"
@@ -169,10 +169,10 @@ router.get("/logout", (req, res) => {
   try {
     // Clear the cookie first
     res.clearCookie("token", {
-      httpOnly: true,
-  secure: false,   // Allow HTTP in dev
-  sameSite: "Lax", // Safer than "None" if same domain
-  path: "/",
+      httpOnly: true,  // Prevent JS access
+  secure: true,    // HTTPS only
+  sameSite: "None", // If your frontend/backend are on different domains
+  path: "/", 
     });
 
     // Destroy the session
