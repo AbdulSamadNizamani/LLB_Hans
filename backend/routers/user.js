@@ -113,6 +113,7 @@ router.post("/login", async (req, res) => {
       secure: true,
       sameSite: "None",
       path: "/",
+      domain: "llb-hans-backend.vercel.app",
     });
     return res.status(200).json({ message: "Login successful" });
   } catch (error) {
@@ -157,6 +158,7 @@ router.get("/logout", (req, res) => {
       secure: true,
       sameSite: "None",
       path: "/",
+      domain: "llb-hans-backend.vercel.app",
     });
 
     // If you're not using sessions, skip this part
