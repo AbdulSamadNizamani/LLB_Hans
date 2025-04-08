@@ -109,9 +109,11 @@ router.post("/login", async (req, res) => {
       expiresIn: "7d",
     });
     res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
       sameSite: "None",
+ domain: "llb-hans-backend.vercel.app", // (Sub)domain(s) under which the cookie will be accesible
+  httpOnly: true,
+  maxAge: 3 * 60 * 60 * 1000,
+  secure: true,
     });
     return res.status(200).json({ message: "Login successful" });
   } catch (error) {
@@ -154,6 +156,7 @@ router.get("/logout", (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "None",
+      domain: "llb-hans-backend.vercel.app",
     };
 
     res.clearCookie("token", tokenOption);
