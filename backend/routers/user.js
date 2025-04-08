@@ -150,14 +150,21 @@ router.get("/verify", verifytoken, async (req, res) => {
 //logout
 router.get("/logout", (req, res) => {
   try {
-    // Clear the cookie with the exact same options as when it was set
     const tokenOption = {
-            httpOnly : true,
-            secure : true,
-            sameSite : 'None'
-        }
-     res.clearCookie("token",tokenOption)
-        res.clearCookie("refresh_token",tokenOption)
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+    };
+
+    res.clearCookie("token", tokenOption);
+    res.clearCookie("refresh_token", tokenOption);
+
+    res.status(200).json({ message: "Logged out successfully." });
+  } catch (error) {
+    console.error("Logout error:", error);
+    res.status(500).json({ message: "Server error during logout." });
+  }
+});
 
 router.post("/forgotpassword", async (req, res) => {
   try {
