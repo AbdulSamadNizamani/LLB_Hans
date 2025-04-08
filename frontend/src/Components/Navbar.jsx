@@ -37,8 +37,10 @@ const Logout = async () => {
       });
       if (res.status === 200) {
         // User is logged in, stay on home
+        setLoggin(true);
       } else {
         navigate("/login");
+        setLoggin(false);
       }
     } catch (error) {
       navigate("/login");
