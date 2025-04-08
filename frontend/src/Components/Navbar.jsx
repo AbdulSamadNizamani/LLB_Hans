@@ -13,44 +13,39 @@ const Navbar = () => {
    const [userdata, setUserdata] = useState([]);
    const [isopen,setIsopen] = useState(false)
   // const loggin = true
- const Logout = async () => {
-    try {
-        axios.defaults.withCredentials = true;
-        const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/auth/logout`, {
-            withCredentials: true, 
-            headers: { 'Content-Type': 'application/json' }
-        });
-        if (res?.status === 200) {
-            navigate('/login'); 
-            window.location.reload();
-        }
-    } catch (error) {
-        console.error("Logout failed", error);
-        // You can show a toast notification here
+const Logout = async () => {
+  try {
+    axios.defaults.withCredentials = true;
+    const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/auth/logout`, {
+      withCredentials: true,
+      headers: { "Content-Type": "application/json" },
+    });
+    if (res?.status === 200) {
+      localStorage.clear(); // Clear any stored tokens
+      sessionStorage.clear();
+      navigate("/login", { replace: true }); // Redirect and replace history
     }
+  } catch (error) {
+    console.error("Logout failed", error);
+  }
 };
-  useEffect(()=>{
-    axios.defaults.withCredentials=true;
-    const verify = async ()=>{
-      try {
-        const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/auth/verify`,{
-          withCredentials:true,
-        })
-        if(res?.status===200){
-          // window.location.reload();
-          setLoggin(true);
-          console.log('User is loggedIn');
-        }else{
-          setLoggin(false)
-          // window.location.reload();
-        }
-      } catch (error) {
-        console.log(error)
-        setLoggin(false)
+ useEffect(() => {
+  const verify = async () => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/auth/verify`, {
+        withCredentials: true,
+      });
+      if (res.status === 200) {
+        // User is logged in, stay on home
+      } else {
+        navigate("/login");
       }
+    } catch (error) {
+      navigate("/login");
     }
-    verify();
-  },[])
+  };
+  verify();
+}, []);
   useEffect(() => {
   const Admin = async () => {
     try {
