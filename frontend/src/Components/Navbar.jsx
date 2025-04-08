@@ -211,7 +211,7 @@ useEffect(() => {
             {userdata.map((data, index) => (
               <div key={index}>
                 <motion.img
-                  src={data.image || "public/image/demo_image.jpg"}
+                  src={data.image || "/image/demo_image.jpg"}
                   alt="Profile"
                   className="w-12 h-12 rounded-full object-cover border-4 border-purple-500 shadow-lg cursor-pointer"
                   whileHover={{ scale: 1.05 }}
