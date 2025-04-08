@@ -24,6 +24,7 @@ const Logout = async () => {
       localStorage.clear(); // Clear any stored tokens
       sessionStorage.clear();
       navigate("/login", { replace: true }); // Redirect and replace history
+      window.location.reload();
     }
   } catch (error) {
     console.error("Logout failed", error);
