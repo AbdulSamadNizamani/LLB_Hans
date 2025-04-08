@@ -90,19 +90,22 @@ useEffect(() => {
   Manager();
 }, []);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/auth/Loggeduserdata`);
-        if (res?.status === 200) {
-          setUserdata(Array.isArray(res.data) ? res.data : [res.data]);
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
+ useEffect(() => {
+  const fetchUserData = async () => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_NODE_BACKEND_URL}/auth/Loggeduserdata`, {
+        withCredentials: true, // Add this to send cookies
+      });
+      console.log("User data response:", res.data); // Debug the response
+      if (res?.status === 200) {
+        setUserdata(Array.isArray(res.data) ? res.data : [res.data]);
       }
-    };
-    fetchUserData();
-  }, []);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+  fetchUserData();
+}, []);
   
   return (
     <>
@@ -208,15 +211,23 @@ useEffect(() => {
           }
           
           <div className="relative inline-block">
-            {userdata.map((data, index) => (
-              <div key={index}>
-                <motion.img
-                  src={data.image || "/image/demo_image.jpg"}
-                  alt="Profile"
-                  className="w-12 h-12 rounded-full object-cover border-4 border-purple-500 shadow-lg cursor-pointer"
-                  whileHover={{ scale: 1.05 }}
-                  onClick={()=>setDrop(!drop)}
-                />
+            {userdata.length > 0 ? (
+  userdata.map((data, index) => (
+    <div key={index}>
+      <motion.img
+        src={data.image || "/image/demo_image.jpg"}
+        alt="Profile"
+        className="w-12 h-12 rounded-full object-cover border-4 border-purple-500 shadow-lg cursor-pointer"
+        whileHover={{ scale: 1.05 }}
+        onClick={() => setDrop(!drop)}
+      />
+    </div>
+  ))
+) : (
+  <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
+    <span className="text-gray-700 font-semibold">?</span>
+  </div>
+)}
               </div>
             ))}
             
