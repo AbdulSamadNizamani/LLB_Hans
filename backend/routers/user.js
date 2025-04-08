@@ -112,8 +112,6 @@ router.post("/login", async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "None",
-      path: "/",
-      domain: "llb-hans-backend.vercel.app",
     });
     return res.status(200).json({ message: "Login successful" });
   } catch (error) {
@@ -153,31 +151,13 @@ router.get("/verify", verifytoken, async (req, res) => {
 router.get("/logout", (req, res) => {
   try {
     // Clear the cookie with the exact same options as when it was set
-    res.clearCookie("token", {
-      httpOnly: true,
-      secure: true,
-      sameSite: "None",
-      path: "/",
-      domain: "llb-hans-backend.vercel.app",
-    });
-
-    // If you're not using sessions, skip this part
-    if (req.session) {
-      req.session.destroy((err) => {
-        if (err) {
-          console.error("Session destruction error:", err);
-          return res.status(500).json({ message: "Failed to destroy session" });
+    const tokenOption = {
+            httpOnly : true,
+            secure : true,
+            sameSite : 'None'
         }
-        return res.status(200).json({ message: "Logged out successfully" });
-      });
-    } else {
-      return res.status(200).json({ message: "Logged out successfully" });
-    }
-  } catch (error) {
-    console.error("Logout error:", error);
-    return res.status(500).json({ message: "Internal server error during logout" });
-  }
-});
+     res.clearCookie("token",tokenOption)
+        res.clearCookie("refresh_token",tokenOption)
 
 router.post("/forgotpassword", async (req, res) => {
   try {
