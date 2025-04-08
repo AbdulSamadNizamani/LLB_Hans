@@ -96,44 +96,28 @@ router.post("/signup", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     await Connect();
-    const {
-      email,
-      password
-    } = req.body;
-    const user = await User.findOne({
-      email
-    });
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({
-        message: "User does not exist"
-      });
+      return res.status(400).json({ message: "User does not exist" });
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({
-        message: "Invalid password"
-      });
+      return res.status(400).json({ message: "Invalid password" });
     }
-    const token = jwt.sign({
-      name: user.name,
-      id: user.id
-    }, process.env.SECRET_KEY, {
-      expiresIn: "7d"
+    const token = jwt.sign({ name: user.name, id: user.id }, process.env.SECRET_KEY, {
+      expiresIn: "7d",
     });
-   res.cookie("token", token, {
-     httpOnly: true,  // Prevent JS access
-  secure: true,    // HTTPS only
-  sameSite: "None", // If your frontend/backend are on different domains
-  path: "/", 
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      path: "/",
     });
-    return res.status(200).json({
-      message: "Login successful"
-    });
+    return res.status(200).json({ message: "Login successful" });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({
-      message: "Internal Server Error"
-    });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 });
 // checking user is loggedin or not
@@ -167,31 +151,24 @@ router.get("/verify", verifytoken, async (req, res) => {
 //logout
 router.get("/logout", (req, res) => {
   try {
-    // Clear the cookie first
+    // Clear the cookie with the exact same options as when it was set
     res.clearCookie("token", {
-      httpOnly: true,  // Prevent JS access
-  secure: true,    // HTTPS only
-  sameSite: "None", // If your frontend/backend are on different domains
-  path: "/", 
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      path: "/",
     });
 
-    // Destroy the session
+    // If you're not using sessions, skip this part
     if (req.session) {
       req.session.destroy((err) => {
         if (err) {
           console.error("Session destruction error:", err);
           return res.status(500).json({ message: "Failed to destroy session" });
         }
-        
-        // Send response after session is destroyed
-        return res.status(200).json({ 
-          message: "Logged out successfully",
-          // You might want to include a redirect URL if needed
-          // redirect: "/login" 
-        });
+        return res.status(200).json({ message: "Logged out successfully" });
       });
     } else {
-      // If there's no session, just respond
       return res.status(200).json({ message: "Logged out successfully" });
     }
   } catch (error) {
